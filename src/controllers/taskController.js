@@ -1,14 +1,12 @@
 const TaskModel = require('../models/Task');
-const mongoose = require('mongoose');
 const {statusCodes, sendResponse} = require('../utils/response');
+const messages = require('../utils/messages')
 
 const createTask = async (req, res, next) => {
   try {
     req.body.userId = req.user._id
-    console.log('req.user: ', req.user);
-    console.log('req.body: ', req.body);
     const task = await TaskModel.create(req.body)
-    sendResponse(req,res,'Task created successfully',task,statusCodes.CREATED)
+    sendResponse(req,res,messages.TASK_CREATED_SUCCESSFULLY,task,statusCodes.CREATED)
   } catch (err) {
     next(err);
   }
@@ -51,7 +49,7 @@ const getTasks = async (req, res, next) => {
         $project: {
           _id: 0,
           totalCount: 1,
-          list: { $slice: ["$results", skip, limit] },
+          list: { $slice: ["$results", skip, parseInt(limit)] },
         },
       }
     ]
@@ -62,7 +60,7 @@ const getTasks = async (req, res, next) => {
 
     const data = { total, page: parseInt(page), limit: parseInt(limit), tasks };
 
-    sendResponse(req, res, 'Fetch', data);
+    sendResponse(req, res, messages.DATA_FETCHED_SUCCESS, data);
   } catch (err) {
     next(err);
   }
@@ -73,7 +71,7 @@ const getTask = async (req, res, next) => {
     const { id } = req.params;
     const task = await TaskModel.findOne({ _id: id, userId: req.user._id });
     if (!task) return res.status(404).json({ message: 'Task not found' });
-    sendResponse(req,res,'Fetch',task)
+    sendResponse(req,res,messages.DATA_FETCHED_SUCCESS,task)
   } catch (err) {
     next(err);
   }
@@ -87,9 +85,9 @@ const updateTask = async (req, res, next) => {
       { $set: req.body },
       { new: true }
     );
-    if (!updated) return res.status(404).json({ message: 'Task not found' });
+    if (!updated) return res.status(404).json({ message: messages.DATA_NOT_FOUND });
 
-    sendResponse(req,res,'Updated',updated)
+    sendResponse(req,res,messages.DATA_FETCHED_SUCCESS,updated)
   } catch (err) {
     next(err);
   }
@@ -99,8 +97,8 @@ const deleteTask = async (req, res, next) => {
   try {
     const { id } = req.params;
     const deleted = await TaskModel.findOneAndDelete({ _id: id, userId: req.user._id });
-    if (!deleted) return res.status(404).json({ message: 'Task not found' });
-    sendResponse(req,res,'Deleted')
+    if (!deleted) return res.status(404).json({ message: messages.DATA_NOT_FOUND });
+    sendResponse(req,res,messages.DELETE_SUCCESS)
   } catch (err) {
     next(err);
   }

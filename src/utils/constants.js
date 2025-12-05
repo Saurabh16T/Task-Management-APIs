@@ -1,12 +1,12 @@
 module.exports = {
     TASK_PRIORITY: {
-        LOW: "Low",
-        MEDIUM: "Medium",
-        HIGH: "High"
+        LOW: "low",
+        MEDIUM: "medium",
+        HIGH: "high"
     },
     TASK_STATUS: {
-        PENDING: "Pending",
-        IN_PROGRESS: "In Progress",
-        COMPLETED: "Done"
+        PENDING: "pending",
+        IN_PROGRESS: "in progress",
+        COMPLETED: "done"
     }
 }

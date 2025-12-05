@@ -1,6 +1,7 @@
 const UserModel = require('../models/User');
 const functions = require('../utils/functions');
 const { statusCodes, sendResponse } = require('../utils/response');
+const messages = require('../utils/messages')
 
 const register = async (req, res, next) => {
   try {
@@ -22,15 +23,15 @@ const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!user) return res.status(400).json({ message: messages.INVALID_CREDS });
 
     const match = await functions.compareHash(password, user.password);
-    if (!match) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!match) return res.status(400).json({ message: messages.INVALID_CREDS });
 
     const payload = { userId: user._id };
     const token = await functions.jwtSign(payload);
 
-    sendResponse(req,res,'User registered successfully',{token})
+    sendResponse(req,res,messages.LOGIN_SUCCESS,{token})
 
   } catch (err) {
     next(err);

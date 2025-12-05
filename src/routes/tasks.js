@@ -51,12 +51,28 @@ router.post('/', validate(createTask), taskController.createTask);
  *    parameters:
  * 
  *      - in: query
- *        name: search
+ *        name: status
  *        required: false
- *        description: The text to search or filter the list.
+ *        description: The status text to filter the list.
  *        schema:
  *          type: string
- *          example: "name"
+ *          example: "pending"
+ * 
+ *      - in: query
+ *        name: priority
+ *        required: false
+ *        description: The priority text to search or filter the list.
+ *        schema:
+ *          type: string
+ *          example: "pending"
+ * 
+ *      - in: query
+ *        name: sort
+ *        required: false
+ *        description: The field to sort the data in the list.
+ *        schema:
+ *          type: string
+ *          example: "createdAt:desc"
  * 
  *      - in: query
  *        name: page

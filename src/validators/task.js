@@ -20,9 +20,9 @@ const updateTask = Joi.object({
 const getTask = Joi.object({
     page: Joi.number().optional(),
     limit: Joi.number().optional(),
-    status: Joi.string().valid(...Object.values(constants.TASK_PRIORITY)).optional(),
-    priority: Joi.string().valid(...Object.values(constants.TASK_STATUS)).optional(),
-    sort: Joi.number().optional(),
+    status: Joi.string().valid(...Object.values(constants.TASK_STATUS)).optional(),
+    priority: Joi.string().valid(...Object.values(constants.TASK_PRIORITY)).optional(),
+    sort: Joi.string().optional(),
 })
 
 const { swagger: createTaskSwagger } = j2s(createTask);
