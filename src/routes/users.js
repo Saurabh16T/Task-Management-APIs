@@ -32,7 +32,7 @@ router.post('/register', validate(register), userController.register);
  * @swagger
  * /users/login:
  *   post:
- *     summary: Register a new user
+ *     summary: Login account
  *     tags:
  *       - Users
  * 

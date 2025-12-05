@@ -4,15 +4,10 @@ const {statusCodes, sendResponse} = require('../utils/response');
 
 const createTask = async (req, res, next) => {
   try {
-    const { title, description, priority, status } = req.body;
-    const task = new TaskModel({
-      title,
-      description,
-      priority,
-      status,
-      userId: req.user.userId
-    });
-    await task.save();
+    req.body.userId = req.user._id
+    console.log('req.user: ', req.user);
+    console.log('req.body: ', req.body);
+    const task = await TaskModel.create(req.body)
     sendResponse(req,res,'Task created successfully',task,statusCodes.CREATED)
   } catch (err) {
     next(err);
@@ -25,7 +20,7 @@ const getTasks = async (req, res, next) => {
     const skip = (Math.max(1, parseInt(page)) - 1) * parseInt(limit);
 
     // Filter stage
-    const filter = {};
+    const filter = { userId: req.user._id };
     if (status) filter.status = status;
     if (priority) filter.priority = priority;
 
@@ -76,7 +71,7 @@ const getTasks = async (req, res, next) => {
 const getTask = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const task = await TaskModel.findOne({ _id: id, userId: req.user.userId });
+    const task = await TaskModel.findOne({ _id: id, userId: req.user._id });
     if (!task) return res.status(404).json({ message: 'Task not found' });
     sendResponse(req,res,'Fetch',task)
   } catch (err) {
@@ -88,7 +83,7 @@ const updateTask = async (req, res, next) => {
   try {
     const { id } = req.params;
     const updated = await TaskModel.findOneAndUpdate(
-      { _id: id, userId: req.user.userId },
+      { _id: id, userId: req.user._id },
       { $set: req.body },
       { new: true }
     );
@@ -103,7 +98,7 @@ const updateTask = async (req, res, next) => {
 const deleteTask = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const deleted = await TaskModel.findOneAndDelete({ _id: id, userId: req.user.userId });
+    const deleted = await TaskModel.findOneAndDelete({ _id: id, userId: req.user._id });
     if (!deleted) return res.status(404).json({ message: 'Task not found' });
     sendResponse(req,res,'Deleted')
   } catch (err) {

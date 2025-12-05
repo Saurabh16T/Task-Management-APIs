@@ -8,7 +8,7 @@ const options = {
     info: {
       title: 'NodeJS Tasks API',
       version: '1.0.0',
-      description: 'API documentation for Posts service',
+      description: 'API documentation for Task management service',
     },
     components: {
       schemas: {
